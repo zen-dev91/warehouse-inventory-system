@@ -1,0 +1,26 @@
+
+<div id="authScreen" class="d-flex align-items-center justify-content-center vh-100 bg-dark px-3" <?php echo !empty($isLoggedIn) ? 'hidden' : ''; ?>>
+  <div class="card shadow-lg border-0" style="width: 100%; max-width: 420px;">
+    <div class="card-body p-4 p-md-5">
+      <div class="text-center mb-4">
+        <img src="assets/logo.jpg" alt="Logo" width="70" height="70" class="rounded mb-2">
+        <h1 class="h4 mt-2 mb-0">Warehouse Inventory</h1>
+        <p class="text-muted small mb-0">Gym Equipment &amp; Supplements</p>
+      </div>
+
+      <form id="loginForm" class="d-block">
+        <div class="alert alert-danger py-2 small mb-3" id="loginErrorAlert" hidden></div>
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" id="login_username" name="username" required autocomplete="username" placeholder="Enter your username">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="login_password" name="password" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-dark w-100 mb-2">Log In</button>
+      </form>
+    </div>
+  </div>
+</div>
+

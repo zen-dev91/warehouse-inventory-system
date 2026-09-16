@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warehouse Inventory — Master Files</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>[hidden] { display: none !important; }</style>
+</head>
+<body class="bg-light">
+
+<div id="authScreen" class="d-flex align-items-center justify-content-center vh-100 bg-dark px-3">
+  <div class="card shadow-lg border-0" style="width: 100%; max-width: 420px;">
+    <div class="card-body p-4 p-md-5">
+      <div class="text-center mb-4">
+        <img src="assets/logo.jpg" alt="Logo" width="70" height="70" class="rounded mb-2">
+        <h1 class="h4 mt-2 mb-0">Warehouse Inventory</h1>
+        <p class="text-muted small mb-0">Gym Equipment &amp; Supplements</p>
+      </div>
+
+      <form id="loginForm" class="d-block">
+        <div class="alert alert-danger py-2 small mb-3" id="loginErrorAlert" hidden></div>
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" id="login_username" name="username" required autocomplete="username" placeholder="Enter your username">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="login_password" name="password" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-dark w-100 mb-2">Log In</button>
+      </form>
+</div>
+  </div>
+</div>
+
+<div id="appShell" hidden>
+  <div class="d-flex flex-column vh-100 overflow-hidden">
+    <header class="d-md-none navbar navbar-dark bg-dark px-3 py-2 border-bottom border-secondary flex-shrink-0">
+      <div class="container-fluid px-0 d-flex align-items-center">
+        <button class="btn btn-outline-light btn-sm me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Toggle navigation">
+          <i class="bi bi-list fs-5"></i>
+        </button>
+        <img src="assets/logo.jpg" alt="Logo" width="28" height="28" class="rounded me-2">
+        <span class="navbar-brand mb-0 h6 text-white text-truncate" id="mobilePageTitle">Dashboard</span>
+      </div>
+    </header>
+
+    <div class="d-flex flex-grow-1 overflow-hidden">
+      <aside class="offcanvas-md offcanvas-start d-flex flex-column bg-dark text-white flex-shrink-0 vh-100 min-vh-100" id="sidebarOffcanvas" tabindex="-1" aria-labelledby="sidebarOffcanvasLabel" style="width:250px;">
+        <div class="offcanvas-header d-md-none border-bottom border-secondary px-3 py-2">
+          <div class="d-flex align-items-center gap-2">
+            <img src="assets/logo.jpg" alt="Logo" width="32" height="32" class="rounded">
+            <strong class="fs-5 text-white" id="sidebarOffcanvasLabel">Warehouse</strong>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas" aria-label="Close"></button>
+        </div>
+
+        <div class="d-none d-md-flex align-items-center gap-2 px-3 py-2 border-bottom border-secondary flex-shrink-0">
+          <img src="assets/logo.jpg" alt="Logo" width="36" height="36" class="rounded">
+          <div>
+            <strong class="d-block fs-5">Warehouse</strong>
+          </div>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column p-0 flex-grow-1 overflow-y-auto">
+          <nav class="nav flex-column flex-nowrap px-2 py-1 flex-grow-1">
+            <small class="text-secondary text-uppercase px-2 mt-2 mb-1" id="sidebarHeaderOverview">Overview</small>
+            <button class="nav-link text-white py-1 px-2 active" data-tab="dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</button>
+
+            <small class="text-secondary text-uppercase px-2 mt-2 mb-1" id="sidebarHeaderLookup">Lookup Tables</small>
+            <button class="nav-link text-white py-1 px-2" data-tab="category" data-module="category"><i class="bi bi-diagram-3 me-2"></i>Categories</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="product" data-module="product"><i class="bi bi-box-seam me-2"></i>Products</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="supplier" data-module="supplier"><i class="bi bi-truck me-2"></i>Suppliers</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="product_supplier" data-module="product_supplier"><i class="bi bi-link-45deg me-2"></i>Product ↔ Supplier</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="role" data-module="role"><i class="bi bi-shield-lock me-2"></i>Roles</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="users" data-module="users"><i class="bi bi-people me-2"></i>Users</button>
+
+            <small class="text-secondary text-uppercase px-2 mt-2 mb-1" id="sidebarHeaderTransactions">Transactions</small>
+            <button class="nav-link text-white py-1 px-2" data-tab="purchase_order" data-module="purchase_order"><i class="bi bi-cart-plus me-2"></i>Purchase Order</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="stock_receiving" data-module="stock_receiving"><i class="bi bi-box-arrow-in-down me-2"></i>Stock Receiving</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="stock_releasing" data-module="stock_releasing"><i class="bi bi-box-arrow-up me-2"></i>Stock Releasing</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="purchase_return" data-module="purchase_return"><i class="bi bi-arrow-return-left me-2"></i>Purchase Return</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="stocks_return" data-module="stocks_return"><i class="bi bi-arrow-return-right me-2"></i>Stocks Return</button>
+            <button class="nav-link text-white py-1 px-2" data-tab="adjustment" data-module="adjustment"><i class="bi bi-sliders me-2"></i>Adjustments</button>
+          </nav>
+
+          <div class="p-2 border-top border-secondary flex-shrink-0 mt-auto bg-dark" id="sidebarUserBox">
+            <div class="px-2 py-0">
+              <strong class="d-block small" id="sidebarUserName">—</strong>
+              <span class="badge bg-secondary" id="sidebarUserRole">—</span>
+            </div>
+            <button class="nav-link text-white py-1 px-2 w-100 text-start" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Log Out</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="flex-grow-1 p-3 p-md-4 overflow-auto">
+
+    <section class="panel active" id="panel-dashboard">
+      <div class="mb-4">
+        <h1 class="h3">Administrator Dashboard</h1>
+        <p class="text-muted">Administrator overview of warehouse master data and system activity.</p>
+      </div>
+
+      <div class="row g-3 mb-4" id="statGrid"></div>
+    </section>
+
+    <section class="panel" id="panel-category" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Categories</h1>
+          <p class="text-muted mb-0">Product groupings used to organize the inventory.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#categoryModal" data-module="category"><i class="bi bi-plus-lg me-1"></i>Add Category</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Category Name</th><th>Description</th><th>Status</th><th class="text-end text-nowrap">Actions</th></tr>
+            </thead>
+            <tbody id="categoryTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-product" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Products</h1>
+          <p class="text-muted mb-0">Items tracked in the warehouse, each tied to a category.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#productModal" data-module="product"><i class="bi bi-plus-lg me-1"></i>Add Product</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Product Name</th><th>Category</th><th>Unit</th><th>Unit Price</th><th>Reorder Lvl</th><th>Status</th><th class="text-end text-nowrap">Actions</th></tr>
+            </thead>
+            <tbody id="productTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-supplier" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Suppliers</h1>
+          <p class="text-muted mb-0">Vendors the warehouse orders stock from.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#supplierModal" data-module="supplier"><i class="bi bi-plus-lg me-1"></i>Add Supplier</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Supplier Name</th><th>Contact Person</th><th>Phone</th><th>Email</th><th>Status</th><th class="text-end text-nowrap">Actions</th></tr>
+            </thead>
+            <tbody id="supplierTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-product_supplier" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Product &#8596; Supplier</h1>
+          <p class="text-muted mb-0">Which suppliers carry which products, and at what cost. A product can have several suppliers.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#linkModal" data-module="product_supplier"><i class="bi bi-plus-lg me-1"></i>Link Supplier</button>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Supplier</label>
+              <select class="form-select" id="filterSupplier">
+                <option value="">-- All Suppliers --</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Product</label>
+              <select class="form-select" id="filterProduct">
+                <option value="">-- All Products --</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Search</label>
+              <input type="text" class="form-control" id="filterSearch" placeholder="Search product or supplier...">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex align-items-center gap-2">
+          <span>Show</span>
+          <select class="form-select form-select-sm" id="linkPageSize">
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+          <span>entries</span>
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="btnRefreshLinks">Refresh</button>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Supplier</th>
+                <th>Supplier Unit Cost (PHP)</th>
+                <th class="text-end text-nowrap">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="linkTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end align-items-center mt-2 mb-3">
+        <nav><ul class="pagination pagination-sm mb-0" id="linkPagination"></ul></nav>
+      </div>
+
+    </section>
+
+    <section class="panel" id="panel-role" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Roles</h1>
+          <p class="text-muted mb-0">Access levels assigned to system users.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#roleModal" data-module="role"><i class="bi bi-plus-lg me-1"></i>Add Role</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Role Name</th><th>Status</th><th class="text-end text-nowrap">Actions</th></tr>
+            </thead>
+            <tbody id="roleTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-users" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Users</h1>
+          <p class="text-muted mb-0">Accounts for staff who operate the warehouse system.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#userModal" data-module="users"><i class="bi bi-plus-lg me-1"></i>Add User</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Username</th><th>Full Name</th><th>Role</th><th>Contact</th><th>Status</th><th class="text-end text-nowrap">Actions</th></tr>
+            </thead>
+            <tbody id="userTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-purchase_order" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Purchase Orders</h1>
+          <p class="text-muted mb-0">Orders placed with suppliers for restock.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#poModal" data-module="purchase_order"><i class="bi bi-plus-lg me-1"></i>New Purchase Order</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Supplier</th><th>Ordered By</th><th>Order Date</th><th>Items</th><th>Total Cost</th><th>Status</th><th class="text-end text-nowrap">Actions</th></tr>
+            </thead>
+            <tbody id="poTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-stock_receiving" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Stock Receiving</h1>
+          <p class="text-muted mb-0">Deliveries received against a pending purchase order.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#receivingModal" data-module="stock_receiving"><i class="bi bi-plus-lg me-1"></i>Record Receiving</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Supplier</th><th>Received By</th><th>Date</th><th>Items</th></tr>
+            </thead>
+            <tbody id="receivingTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-stock_releasing" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Stock Releasing</h1>
+          <p class="text-muted mb-0">Stock released from the warehouse to an internal requester.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#releasingModal" data-module="stock_releasing"><i class="bi bi-plus-lg me-1"></i>Release Stock</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Requested By</th><th>Released By</th><th>Date</th><th>Items</th></tr>
+            </thead>
+            <tbody id="releasingTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-purchase_return" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Purchase Returns</h1>
+          <p class="text-muted mb-0">Stock sent back to a supplier (damaged, wrong item, etc.).</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#preturnModal" data-module="purchase_return"><i class="bi bi-plus-lg me-1"></i>New Purchase Return</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Supplier</th><th>Returned By</th><th>Date</th><th>Reason</th><th>Items</th></tr>
+            </thead>
+            <tbody id="preturnTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-stocks_return" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Stocks Return</h1>
+          <p class="text-muted mb-0">Unused stock returned by an internal requester back into inventory.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#sreturnModal" data-module="stocks_return"><i class="bi bi-plus-lg me-1"></i>New Stocks Return</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Requested By</th><th>Processed By</th><th>Date</th><th>Reason</th><th>Items</th></tr>
+            </thead>
+            <tbody id="sreturnTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-adjustment" hidden>
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+        <div>
+          <h1 class="h3">Stock Adjustments</h1>
+          <p class="text-muted mb-0">Manual corrections to on-hand quantity (count discrepancies, breakage, etc.) not caused by a purchase, receiving, releasing, or return.</p>
+        </div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#adjustmentModal" data-module="adjustment"><i class="bi bi-plus-lg me-1"></i>New Adjustment</button>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Adjusted By</th><th>Date</th><th>Reason</th><th>Items</th></tr>
+            </thead>
+            <tbody id="adjustmentTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  </div>
+</div>
+
+<div class="modal fade" id="categoryModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="categoryForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="categoryModalTitle">Add Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="category_id">
+          <div class="mb-3">
+            <label class="form-label">Category Name</label>
+            <input type="text" class="form-control" id="category_name" required placeholder="e.g. Office Supplies">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" id="category_description" rows="3" placeholder="Optional short description"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="productModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="productForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productModalTitle">Add Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="product_id">
+          <div class="mb-3">
+            <label class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="product_name" required placeholder="e.g. Bond Paper A4">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="product_category_id" required></select>
+          </div>
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">Unit of Measure</label>
+              <input type="text" class="form-control" id="unit_measure" required placeholder="e.g. Box, Piece, Ream">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Unit Price</label>
+              <input type="number" class="form-control" id="unit_price" step="0.01" min="0" required placeholder="0.00">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Reorder Level</label>
+            <input type="number" class="form-control" id="reorder_level" min="0" required placeholder="e.g. 20">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="supplierModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="supplierForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="supplierModalTitle">Add Supplier</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="supplier_id">
+          <div class="mb-3">
+            <label class="form-label">Supplier Name</label>
+            <input type="text" class="form-control" id="supplier_name" required placeholder="e.g. CDO Office Depot">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contact Person</label>
+            <input type="text" class="form-control" id="contact_person" placeholder="e.g. Liza Cortez">
+          </div>
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">Phone</label>
+              <input type="text" class="form-control" id="phone" placeholder="088-123-4567">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="name@supplier.com">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Address</label>
+            <textarea class="form-control" id="address" rows="2" placeholder="Street, City"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Supplier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="linkModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="linkForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="linkModalTitle">Link Supplier to Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">1. Select Supplier</label>
+            <select class="form-select" id="link_supplier_id" required>
+              <option value="">-- Select Supplier --</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">2. Search Products (Optional)</label>
+            <input type="text" class="form-control" id="linkSearchProducts" placeholder="Search products...">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">3. Select Products and Set Supplier Unit Cost</label>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnCheckAll">Check All</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnUncheckAll">Uncheck All</button>
+              </div>
+              <span id="selectedCount" class="fw-bold">Selected Products: 0</span>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th style="width: 40px;"><input type="checkbox" id="checkAllHeader"></th>
+                    <th>Product</th>
+                    <th style="width: 200px;">Supplier Unit Cost (PHP)</th>
+                  </tr>
+                </thead>
+                <tbody id="linkProductList">
+                  <tr><td colspan="3" class="text-muted fst-italic">Select a supplier to view products.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark" id="btnSaveLinks">Save Links</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="roleModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <form id="roleForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="roleModalTitle">Add Role</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="role_id">
+          <div class="mb-3">
+            <label class="form-label">Role Name</label>
+            <input type="text" class="form-control" id="role_name" required placeholder="e.g. Branch Supervisor">
+          </div>
+          <div class="mb-3">
+            <label class="form-label d-block mb-1">Permissions</label>
+            <p class="text-muted small mb-2">Each role gets its own dashboard and navigation. Tick the modules this role may view and manage.</p>
+            <div class="table-responsive border rounded">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="ps-3">MODULE</th>
+                    <th class="text-center">VIEW</th>
+                    <th class="text-center">MANAGE</th>
+                  </tr>
+                </thead>
+                <tbody id="rolePermissionsTable">
+                  <tr>
+                    <td class="ps-3">Dashboard</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="dashboard" data-action="view" id="perm_view_dashboard"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="dashboard" data-action="manage" id="perm_manage_dashboard"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Categories</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="category" data-action="view" id="perm_view_category"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="category" data-action="manage" id="perm_manage_category"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Products</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="product" data-action="view" id="perm_view_product"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="product" data-action="manage" id="perm_manage_product"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Suppliers</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="supplier" data-action="view" id="perm_view_supplier"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="supplier" data-action="manage" id="perm_manage_supplier"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Product ↔ Supplier</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="product_supplier" data-action="view" id="perm_view_product_supplier"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="product_supplier" data-action="manage" id="perm_manage_product_supplier"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Roles</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="role" data-action="view" id="perm_view_role"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="role" data-action="manage" id="perm_manage_role"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Users</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="users" data-action="view" id="perm_view_users"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="users" data-action="manage" id="perm_manage_users"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Purchase Orders</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="purchase_order" data-action="view" id="perm_view_purchase_order"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="purchase_order" data-action="manage" id="perm_manage_purchase_order"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Stock Receiving</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="stock_receiving" data-action="view" id="perm_view_stock_receiving"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="stock_receiving" data-action="manage" id="perm_manage_stock_receiving"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Stock Releasing</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="stock_releasing" data-action="view" id="perm_view_stock_releasing"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="stock_releasing" data-action="manage" id="perm_manage_stock_releasing"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Purchase Returns</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="purchase_return" data-action="view" id="perm_view_purchase_return"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="purchase_return" data-action="manage" id="perm_manage_purchase_return"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Stocks Return</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="stocks_return" data-action="view" id="perm_view_stocks_return"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="stocks_return" data-action="manage" id="perm_manage_stocks_return"></td>
+                  </tr>
+                  <tr>
+                    <td class="ps-3">Adjustments</td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="adjustment" data-action="view" id="perm_view_adjustment"></td>
+                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="adjustment" data-action="manage" id="perm_manage_adjustment"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Role</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="userForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userModalTitle">Add User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="user_id">
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-control" id="first_name" required placeholder="Juan">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="last_name" required placeholder="Dela Cruz">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" required placeholder="e.g. employee.username">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Role</label>
+              <select class="form-select" id="user_role_id" required></select>
+            </div>
+          </div>
+          <div class="mb-3" id="passwordFieldLabel">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="At least 12 characters">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contact Number</label>
+            <input type="text" class="form-control" id="contact_number" placeholder="09171234567">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="resetPwdModal" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <form id="resetPwdForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Reset Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="reset_user_id">
+          <div class="mb-3">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-control" id="new_password" required placeholder="At least 12 characters">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Reset Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="poModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="poForm">
+        <div class="modal-header">
+          <h5 class="modal-title">New Purchase Order</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">Supplier</label>
+              <select class="form-select" id="po_supplier_id" required></select>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Processed By</label>
+              <select class="form-select" id="po_user_id" required></select>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Order Date</label>
+              <input type="date" class="form-control" id="po_order_date" required>
+            </div>
+          </div>
+          <hr>
+          <div class="row g-2 align-items-end">
+            <div class="col-5">
+              <label class="form-label">Product</label>
+              <select class="form-select" id="po_item_product"></select>
+            </div>
+            <div class="col-2">
+              <label class="form-label">Qty</label>
+              <input type="number" class="form-control" id="po_item_qty" min="1" value="1">
+            </div>
+            <div class="col-3">
+              <label class="form-label">Unit Cost</label>
+              <input type="number" class="form-control" id="po_item_cost" min="0" step="0.01" placeholder="0.00">
+            </div>
+            <div class="col-2">
+              <button type="button" class="btn btn-outline-dark w-100" onclick="addLineItem('po')">Add</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm mt-3">
+              <thead><tr><th>Product</th><th>Qty</th><th>Unit Cost</th><th>Subtotal</th><th></th></tr></thead>
+              <tbody id="po_items_table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Purchase Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="receivingModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="receivingForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Record Stock Receiving</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">Pending Purchase Order</label>
+              <select class="form-select" id="receiving_po_id" required onchange="loadPoItemsForReceiving()"></select>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Received By</label>
+              <select class="form-select" id="receiving_user_id" required></select>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Receiving Date</label>
+              <input type="date" class="form-control" id="receiving_date" required>
+            </div>
+          </div>
+          <p class="text-muted small mb-2">Select a purchase order above to load its ordered items. Full receipt of all ordered quantities will be recorded atomically.</p>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead><tr><th>Product</th><th>Qty Ordered</th><th>Qty Received</th></tr></thead>
+              <tbody id="receiving_items_table"><tr><td colspan="3" class="text-muted fst-italic">Select a purchase order first.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Receiving</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="releasingModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="releasingForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Release Stock</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">Requested By</label>
+              <input type="text" class="form-control" id="releasing_requested_by" required placeholder="e.g. Branch 2 / Ana Reyes">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Released By</label>
+              <select class="form-select" id="releasing_user_id" required></select>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Releasing Date</label>
+              <input type="date" class="form-control" id="releasing_date" required>
+            </div>
+          </div>
+          <hr>
+          <div class="row g-2 align-items-end">
+            <div class="col-7">
+              <label class="form-label">Product</label>
+              <select class="form-select" id="releasing_item_product"></select>
+            </div>
+            <div class="col-3">
+              <label class="form-label">Qty</label>
+              <input type="number" class="form-control" id="releasing_item_qty" min="1" value="1">
+            </div>
+            <div class="col-2">
+              <button type="button" class="btn btn-outline-dark w-100" onclick="addLineItem('releasing')">Add</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm mt-3">
+              <thead><tr><th>Product</th><th>Qty</th><th></th></tr></thead>
+              <tbody id="releasing_items_table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Releasing</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="preturnModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="preturnForm">
+        <div class="modal-header">
+          <h5 class="modal-title">New Purchase Return</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">Supplier</label>
+              <select class="form-select" id="preturn_supplier_id" required></select>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Processed By</label>
+              <select class="form-select" id="preturn_user_id" required></select>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Return Date</label>
+              <input type="date" class="form-control" id="preturn_date" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Reason</label>
+            <input type="text" class="form-control" id="preturn_reason" placeholder="e.g. Damaged on arrival">
+          </div>
+          <hr>
+          <div class="row g-2 align-items-end">
+            <div class="col-7">
+              <label class="form-label">Product</label>
+              <select class="form-select" id="preturn_item_product"></select>
+            </div>
+            <div class="col-3">
+              <label class="form-label">Qty</label>
+              <input type="number" class="form-control" id="preturn_item_qty" min="1" value="1">
+            </div>
+            <div class="col-2">
+              <button type="button" class="btn btn-outline-dark w-100" onclick="addLineItem('preturn')">Add</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm mt-3">
+              <thead><tr><th>Product</th><th>Qty</th><th></th></tr></thead>
+              <tbody id="preturn_items_table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Purchase Return</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="sreturnModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="sreturnForm">
+        <div class="modal-header">
+          <h5 class="modal-title">New Stocks Return</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">Requested By</label>
+              <input type="text" class="form-control" id="sreturn_requested_by" required placeholder="e.g. Branch 2 / Ana Reyes">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Processed By</label>
+              <select class="form-select" id="sreturn_user_id" required></select>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Return Date</label>
+              <input type="date" class="form-control" id="sreturn_date" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Reason</label>
+            <input type="text" class="form-control" id="sreturn_reason" placeholder="e.g. Unused, returned to stock">
+          </div>
+          <hr>
+          <div class="row g-2 align-items-end">
+            <div class="col-7">
+              <label class="form-label">Product</label>
+              <select class="form-select" id="sreturn_item_product"></select>
+            </div>
+            <div class="col-3">
+              <label class="form-label">Qty</label>
+              <input type="number" class="form-control" id="sreturn_item_qty" min="1" value="1">
+            </div>
+            <div class="col-2">
+              <button type="button" class="btn btn-outline-dark w-100" onclick="addLineItem('sreturn')">Add</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm mt-3">
+              <thead><tr><th>Product</th><th>Qty</th><th></th></tr></thead>
+              <tbody id="sreturn_items_table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Stocks Return</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="adjustmentModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="adjustmentForm">
+        <div class="modal-header">
+          <h5 class="modal-title">New Stock Adjustment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">Processed By</label>
+              <select class="form-select" id="adjustment_user_id" required></select>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Adjustment Date</label>
+              <input type="date" class="form-control" id="adjustment_date" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Reason</label>
+            <input type="text" class="form-control" id="adjustment_reason" placeholder="e.g. Physical count discrepancy">
+          </div>
+          <hr>
+          <div class="row g-2 align-items-end">
+            <div class="col-5">
+              <label class="form-label">Product</label>
+              <select class="form-select" id="adjustment_item_product"></select>
+            </div>
+            <div class="col-2">
+              <label class="form-label">Qty</label>
+              <input type="number" class="form-control" id="adjustment_item_qty" min="1" value="1">
+            </div>
+            <div class="col-3">
+              <label class="form-label">Type</label>
+              <select class="form-select" id="adjustment_item_type">
+                <option value="Addition">Addition</option>
+                <option value="Deduction">Deduction</option>
+              </select>
+            </div>
+            <div class="col-2">
+              <button type="button" class="btn btn-outline-dark w-100" onclick="addLineItem('adjustment')">Add</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm mt-3">
+              <thead><tr><th>Product</th><th>Qty</th><th>Type</th><th></th></tr></thead>
+              <tbody id="adjustment_items_table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Adjustment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<button id="modalTrigger" type="button" data-bs-toggle="modal" data-bs-target="" hidden></button>
+
+<template id="tmpl-badge-active">
+  <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Active</span>
+</template>
+<template id="tmpl-badge-inactive">
+  <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Inactive</span>
+</template>
+<template id="tmpl-badge-pending">
+  <span class="badge bg-warning text-dark">Pending</span>
+</template>
+<template id="tmpl-badge-received">
+  <span class="badge bg-success">Received</span>
+</template>
+<template id="tmpl-badge-cancelled">
+  <span class="badge bg-danger">Cancelled</span>
+</template>
+<template id="tmpl-badge-status-generic">
+  <span class="badge bg-secondary"></span>
+</template>
+
+<template id="tmpl-btn-edit">
+  <button type="button" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></button>
+</template>
+<template id="tmpl-btn-deactivate">
+  <button type="button" class="btn btn-sm btn-outline-danger" title="Deactivate"><i class="bi bi-slash-circle"></i></button>
+</template>
+<template id="tmpl-btn-reactivate">
+  <button type="button" class="btn btn-sm btn-outline-success" title="Reactivate"><i class="bi bi-arrow-counterclockwise"></i></button>
+</template>
+<template id="tmpl-btn-reset-password">
+  <button type="button" class="btn btn-sm btn-outline-secondary" title="Reset password"><i class="bi bi-key"></i></button>
+</template>
+<template id="tmpl-btn-cancel-po">
+  <button type="button" class="btn btn-sm btn-outline-danger" title="Cancel Purchase Order"><i class="bi bi-x-circle me-1"></i>Cancel</button>
+</template>
+<template id="tmpl-btn-delete-link">
+  <button type="button" class="btn btn-sm btn-outline-danger" title="Remove link"><i class="bi bi-trash"></i></button>
+</template>
+<template id="tmpl-btn-remove-line">
+  <button type="button" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+</template>
+<template id="tmpl-txt-view-only">
+  <span class="text-muted small fst-italic">View only</span>
+</template>
+
+<template id="tmpl-stat-card">
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="mb-2"><i class="bi fs-4 text-warning stat-icon"></i></div>
+        <div class="fs-2 fw-bold stat-value"></div>
+        <div class="text-muted small stat-label"></div>
+      </div>
+    </div>
+  </div>
+</template>
+<template id="tmpl-stat-card-loading">
+  <div class="col-12"><div class="card p-3">Loading…</div></div>
+</template>
+<template id="tmpl-stat-card-error">
+  <div class="col-12"><div class="card p-3">Could not load dashboard data. Check your database connection.</div></div>
+</template>
+
+<template id="tmpl-row-empty">
+  <tr><td class="text-center text-muted py-4 fst-italic row-empty-cell"></td></tr>
+</template>
+<template id="tmpl-line-item-empty">
+  <tr><td class="text-center text-muted fst-italic py-2 line-empty-cell">No items added yet.</td></tr>
+</template>
+
+<template id="tmpl-row-category">
+  <tr>
+    <td><strong class="row-name"></strong></td>
+    <td class="row-desc"></td>
+    <td class="row-status"></td>
+    <td class="text-end text-nowrap row-actions"></td>
+  </tr>
+</template>
+<template id="tmpl-row-product">
+  <tr>
+    <td><strong class="row-name"></strong></td>
+    <td class="row-cat"></td>
+    <td class="row-unit"></td>
+    <td class="font-monospace row-price"></td>
+    <td class="row-reorder"></td>
+    <td class="row-status"></td>
+    <td class="text-end text-nowrap row-actions"></td>
+  </tr>
+</template>
+<template id="tmpl-row-supplier">
+  <tr>
+    <td><strong class="row-name"></strong></td>
+    <td class="row-contact"></td>
+    <td class="row-phone"></td>
+    <td class="row-email"></td>
+    <td class="row-status"></td>
+    <td class="text-end text-nowrap row-actions"></td>
+  </tr>
+</template>
+<template id="tmpl-row-link">
+  <tr>
+    <td><strong class="row-product"></strong></td>
+    <td class="row-supplier"></td>
+    <td class="font-monospace row-cost"></td>
+    <td class="text-end text-nowrap row-actions"></td>
+  </tr>
+</template>
+<template id="tmpl-row-role">
+  <tr>
+    <td><strong class="row-name"></strong></td>
+    <td class="row-status"></td>
+    <td class="text-end text-nowrap row-actions"></td>
+  </tr>
+</template>
+<template id="tmpl-row-user">
+  <tr>
+    <td><strong class="row-username"></strong></td>
+    <td class="row-name"></td>
+    <td class="row-role"></td>
+    <td class="row-email"></td>
+    <td class="row-status"></td>
+    <td class="text-end text-nowrap row-actions"></td>
+  </tr>
+</template>
+<template id="tmpl-row-po">
+  <tr>
+    <td class="row-supplier"></td>
+    <td class="row-by"></td>
+    <td class="row-date"></td>
+    <td class="row-items"></td>
+    <td class="font-monospace row-cost"></td>
+    <td class="row-status"></td>
+    <td class="text-end text-nowrap row-actions"></td>
+  </tr>
+</template>
+<template id="tmpl-row-receiving">
+  <tr>
+    <td class="row-supplier"></td>
+    <td class="row-by"></td>
+    <td class="row-date"></td>
+    <td class="row-items"></td>
+  </tr>
+</template>
+<template id="tmpl-row-releasing">
+  <tr>
+    <td><strong class="row-to"></strong></td>
+    <td class="row-by"></td>
+    <td class="row-date"></td>
+    <td class="row-items"></td>
+  </tr>
+</template>
+<template id="tmpl-row-preturn">
+  <tr>
+    <td class="row-supplier"></td>
+    <td class="row-by"></td>
+    <td class="row-date"></td>
+    <td class="row-reason"></td>
+    <td class="row-items"></td>
+  </tr>
+</template>
+<template id="tmpl-row-sreturn">
+  <tr>
+    <td><strong class="row-by-customer"></strong></td>
+    <td class="row-by-staff"></td>
+    <td class="row-date"></td>
+    <td class="row-reason"></td>
+    <td class="row-items"></td>
+  </tr>
+</template>
+<template id="tmpl-row-adjustment">
+  <tr>
+    <td class="row-by"></td>
+    <td class="row-date"></td>
+    <td class="row-reason"></td>
+    <td class="row-items"></td>
+  </tr>
+</template>
+<template id="tmpl-row-receiving-item">
+  <tr class="receiving-row" data-product-id="">
+    <td class="row-product-name"></td>
+    <td class="row-qty-ordered"></td>
+    <td><input type="number" class="form-control form-control-sm row-qty-input" min="0" value="" readonly></td>
+  </tr>
+</template>
+<template id="tmpl-line-item-po">
+  <tr>
+    <td class="line-product"></td>
+    <td class="line-qty"></td>
+    <td class="line-cost"></td>
+    <td class="line-subtotal"></td>
+    <td class="text-end line-action"></td>
+  </tr>
+</template>
+<template id="tmpl-line-item-adjustment">
+  <tr>
+    <td class="line-product"></td>
+    <td class="line-qty"></td>
+    <td class="line-type"></td>
+    <td class="text-end line-action"></td>
+  </tr>
+</template>
+<template id="tmpl-line-item-simple">
+  <tr>
+    <td class="line-product"></td>
+    <td class="line-qty"></td>
+    <td class="text-end line-action"></td>
+  </tr>
+</template>
+
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+  <div id="toastSuccess" class="toast show align-items-center text-white border-0 bg-success" role="alert" aria-live="assertive" aria-atomic="true" hidden>
+    <div class="d-flex">
+      <div class="toast-body" id="toastSuccessBody"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close" onclick="this.closest('#toastSuccess').hidden = true"></button>
+    </div>
+  </div>
+  <div id="toastError" class="toast show align-items-center text-white border-0 bg-danger" role="alert" aria-live="assertive" aria-atomic="true" hidden>
+    <div class="d-flex">
+      <div class="toast-body" id="toastErrorBody"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close" onclick="this.closest('#toastError').hidden = true"></button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="js/app.js?v=20260915_fix"></script>
+<script src="js/dashboard.js?v=20260915_fix"></script>
+<script src="js/category.js?v=20260915_fix"></script>
+<script src="js/product.js?v=20260915_fix"></script>
+<script src="js/supplier.js?v=20260915_fix"></script>
+<script src="js/product_supplier.js?v=20260915_fix"></script>
+<script src="js/role.js?v=20260915_fix"></script>
+<script src="js/users.js?v=20260915_fix"></script>
+<script src="js/purchase_order.js?v=20260915_fix"></script>
+<script src="js/stock_receiving.js?v=20260915_fix"></script>
+<script src="js/stock_releasing.js?v=20260915_fix"></script>
+<script src="js/purchase_return.js?v=20260915_fix"></script>
+<script src="js/stocks_return.js?v=20260915_fix"></script>
+<script src="js/adjustment.js?v=20260915_fix"></script>
+</body>
+</html>
+

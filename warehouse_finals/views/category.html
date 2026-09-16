@@ -1,0 +1,58 @@
+
+<section class="panel" id="panel-category" hidden>
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+    <div>
+      <h1 class="h3">Categories</h1>
+      <p class="text-muted mb-0">Product groupings used to organize the inventory.</p>
+    </div>
+    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#categoryModal" data-module="category"><i class="bi bi-plus-lg me-1"></i>Add Category</button>
+  </div>
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr><th>Category Name</th><th>Description</th><th>Status</th><th class="text-end text-nowrap">Actions</th></tr>
+        </thead>
+        <tbody id="categoryTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="modal fade" id="categoryModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="categoryForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="categoryModalTitle">Add Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="category_id">
+          <div class="mb-3">
+            <label class="form-label">Category Name</label>
+            <input type="text" class="form-control" id="category_name" required placeholder="e.g. Office Supplies">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" id="category_description" rows="3" placeholder="Optional short description"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark">Save Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<template id="tmpl-row-category">
+  <tr>
+    <td><strong class="row-name"></strong></td>
+    <td class="row-desc"></td>
+    <td class="row-status"></td>
+    <td class="text-end text-nowrap row-actions"></td>
+  </tr>
+</template>
+

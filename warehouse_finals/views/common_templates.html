@@ -1,0 +1,88 @@
+
+<button id="modalTrigger" type="button" data-bs-toggle="modal" data-bs-target="" hidden></button>
+
+<template id="tmpl-badge-active">
+  <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Active</span>
+</template>
+<template id="tmpl-badge-inactive">
+  <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Inactive</span>
+</template>
+<template id="tmpl-badge-pending">
+  <span class="badge bg-warning text-dark">Pending</span>
+</template>
+<template id="tmpl-badge-received">
+  <span class="badge bg-success">Received</span>
+</template>
+<template id="tmpl-badge-cancelled">
+  <span class="badge bg-danger">Cancelled</span>
+</template>
+<template id="tmpl-badge-status-generic">
+  <span class="badge bg-secondary"></span>
+</template>
+
+<template id="tmpl-btn-edit">
+  <button type="button" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></button>
+</template>
+<template id="tmpl-btn-deactivate">
+  <button type="button" class="btn btn-sm btn-outline-danger" title="Deactivate"><i class="bi bi-slash-circle"></i></button>
+</template>
+<template id="tmpl-btn-reactivate">
+  <button type="button" class="btn btn-sm btn-outline-success" title="Reactivate"><i class="bi bi-arrow-counterclockwise"></i></button>
+</template>
+<template id="tmpl-btn-reset-password">
+  <button type="button" class="btn btn-sm btn-outline-secondary" title="Reset password"><i class="bi bi-key"></i></button>
+</template>
+<template id="tmpl-btn-remove-line">
+  <button type="button" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+</template>
+<template id="tmpl-txt-view-only">
+  <span class="text-muted small fst-italic">View only</span>
+</template>
+
+<template id="tmpl-stat-card">
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="mb-2"><i class="bi fs-4 text-warning stat-icon"></i></div>
+        <div class="fs-2 fw-bold stat-value"></div>
+        <div class="text-muted small stat-label"></div>
+      </div>
+    </div>
+  </div>
+</template>
+<template id="tmpl-stat-card-loading">
+  <div class="col-12"><div class="card p-3">Loading…</div></div>
+</template>
+<template id="tmpl-stat-card-error">
+  <div class="col-12"><div class="card p-3">Could not load dashboard data. Check your database connection.</div></div>
+</template>
+
+<template id="tmpl-row-empty">
+  <tr><td class="text-center text-muted py-4 fst-italic row-empty-cell"></td></tr>
+</template>
+<template id="tmpl-line-item-empty">
+  <tr><td class="text-center text-muted fst-italic py-2 line-empty-cell">No items added yet.</td></tr>
+</template>
+<template id="tmpl-line-item-simple">
+  <tr>
+    <td class="line-product"></td>
+    <td class="line-qty"></td>
+    <td class="text-end line-action"></td>
+  </tr>
+</template>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+  <div id="toastSuccess" class="toast show align-items-center text-white border-0 bg-success" role="alert" aria-live="assertive" aria-atomic="true" hidden>
+    <div class="d-flex">
+      <div class="toast-body" id="toastSuccessBody"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close" onclick="this.closest('#toastSuccess').hidden = true"></button>
+    </div>
+  </div>
+  <div id="toastError" class="toast show align-items-center text-white border-0 bg-danger" role="alert" aria-live="assertive" aria-atomic="true" hidden>
+    <div class="d-flex">
+      <div class="toast-body" id="toastErrorBody"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close" onclick="this.closest('#toastError').hidden = true"></button>
+    </div>
+  </div>
+</div>
+

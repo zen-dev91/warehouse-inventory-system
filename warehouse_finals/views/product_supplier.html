@@ -1,0 +1,140 @@
+
+<section class="panel" id="panel-product_supplier" hidden>
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2 mb-3">
+    <div>
+      <h1 class="h3">Product &#8596; Supplier</h1>
+      <p class="text-muted mb-0">Which suppliers carry which products, and at what cost. A product can have several suppliers.</p>
+    </div>
+    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#linkModal" data-module="product_supplier"><i class="bi bi-plus-lg me-1"></i>Link Supplier</button>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Supplier</label>
+          <select class="form-select" id="filterSupplier">
+            <option value="">-- All Suppliers --</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Product</label>
+          <select class="form-select" id="filterProduct">
+            <option value="">-- All Products --</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Search</label>
+          <input type="text" class="form-control" id="filterSearch" placeholder="Search product or supplier...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div class="d-flex align-items-center gap-2">
+      <span>Show</span>
+      <select class="form-select form-select-sm" id="linkPageSize">
+        <option value="10" selected>10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+      </select>
+      <span>entries</span>
+    </div>
+    <button type="button" class="btn btn-outline-secondary btn-sm" id="btnRefreshLinks">Refresh</button>
+  </div>
+
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Supplier</th>
+            <th>Supplier Unit Cost (PHP)</th>
+            <th class="text-end text-nowrap">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="linkTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end align-items-center mt-2 mb-3">
+    <nav><ul class="pagination pagination-sm mb-0" id="linkPagination"></ul></nav>
+  </div>
+
+</section>
+
+<div class="modal fade" id="linkModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="linkForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="linkModalTitle">Link Supplier to Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">1. Select Supplier</label>
+            <select class="form-select" id="link_supplier_id" required>
+              <option value="">-- Select Supplier --</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">2. Search Products (Optional)</label>
+            <input type="text" class="form-control" id="linkSearchProducts" placeholder="Search products...">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">3. Select Products and Set Supplier Unit Cost</label>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnCheckAll">Check All</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnUncheckAll">Uncheck All</button>
+              </div>
+              <span id="selectedCount" class="fw-bold">Selected Products: 0</span>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th style="width: 40px;"><input type="checkbox" id="checkAllHeader"></th>
+                    <th>Product</th>
+                    <th style="width: 200px;">Supplier Unit Cost (PHP)</th>
+                  </tr>
+                </thead>
+                <tbody id="linkProductList">
+                  <tr><td colspan="3" class="text-muted fst-italic">Select a supplier to view products.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-dark" id="btnSaveLinks">Save Links</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<template id="tmpl-row-link">
+  <tr>
+    <td class="row-num"></td>
+    <td><strong class="row-product"></strong></td>
+    <td class="row-supplier"></td>
+    <td class="font-monospace row-cost"></td>
+    <td class="text-end text-nowrap row-actions"></td>
+  </tr>
+</template>
+
+<template id="tmpl-btn-delete-link">
+  <button type="button" class="btn btn-sm btn-outline-danger" title="Remove link">Unlink</button>
+</template>
+

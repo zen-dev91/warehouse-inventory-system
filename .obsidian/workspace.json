@@ -1,0 +1,232 @@
+{
+  "main": {
+    "id": "488aba88847a917c",
+    "type": "split",
+    "children": [
+      {
+        "id": "0681238c0c957463",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5448b9bef2eddd7d",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "30573daec9f80d9c",
+    "type": "split",
+    "children": [
+      {
+        "id": "65cb012fddafd4ca",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a7d862908a12e381",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "3ce4ebeec86a4ed7",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "254904884aacd533",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "53a28bb3aa1804e1",
+    "type": "split",
+    "children": [
+      {
+        "id": "8e60a4da0c9bb4d1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "512a6d8bc572a6da",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "ee5386bab3866f79",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Untitled.canvas",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "9cdf336b1119bbab",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "11e1cebb7d46b14f",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "e783354b7d66658c",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Untitled.canvas",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          },
+          {
+            "id": "4db544e46c1632af",
+            "type": "leaf",
+            "state": {
+              "type": "antigravity-terminal-view",
+              "state": {},
+              "icon": "bot",
+              "title": "Antigravity CLI"
+            }
+          }
+        ],
+        "currentTab": 5
+      }
+    ],
+    "direction": "horizontal",
+    "width": 440.699951171875
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "antigravity-cli-sidebar:Open Antigravity CLI": false
+    }
+  },
+  "active": "5448b9bef2eddd7d",
+  "lastOpenFiles": [
+    "00_Project_Overview_&_Graph_Hub.md",
+    "Untitled 4.canvas",
+    "10_Link_Supplier_Data_Review.md",
+    "09_Product_Supplier_Checkbox_Workflow_Improvement.md",
+    "08_UI_Design_Table_Breathing_Room_Fix.md",
+    "07_Session_Lifecycle_&_Login_Back_Fix.md",
+    "06_Modular_Frontend_Architecture.md",
+    "05_Comprehensive_Fixes_&_Code_Diffs.md",
+    "04_API_&_Schema_Mismatches.md",
+    "03_Fatal_Frontend_Runtime_Errors.md",
+    "02_Critical_Security_Vulnerabilities.md",
+    "01_Architecture_&_Data_Flow.md",
+    "09_Link_Supplier_Data_Review.md",
+    "warehouse_finals/assets/logo.jpg",
+    "warehouse_finals/assets",
+    "README.md",
+    "warehouse_finals/README.md",
+    "Untitled.base",
+    "warehouse_finals/api/stock_receiving.php",
+    "warehouse_finals/api/product.php",
+    "Untitled 2.canvas",
+    "warehouse_finals/views/role.html",
+    "warehouse_finals/views/stock_receiving.html",
+    "warehouse_finals/views/supplier.html",
+    "warehouse_finals/index.php",
+    "warehouse_finals/js/stock_receiving.js",
+    "warehouse_finals/api/product_supplier.php",
+    "Untitled 1.canvas",
+    "Untitled.md",
+    "Untitled 3.canvas",
+    "Untitled.canvas",
+    "07_Environment_Configuration_&_Bootstrap.md"
+  ]
+}
