@@ -1,0 +1,8 @@
+# Ignore all root-level markdown documentation except README.md
+/*.md
+!/README.md
+
+# Ignore Obsidian canvas and configuration
+*.canvas
+.obsidian/
+.vscode/
