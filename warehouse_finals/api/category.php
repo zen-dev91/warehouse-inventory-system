@@ -40,9 +40,11 @@ class CategoryApi {
         requireCsrf();
         $body = getRequestBody();
         $name = isset($body['category_name']) && is_string($body['category_name']) ? trim($body['category_name']) : '';
+        $desc = isset($body['description']) && is_string($body['description']) ? trim($body['description']) : null;
+        if ($desc === '') $desc = null;
 
-        if (!validateName($name, 100)) {
-            sendResponse(false, 'Invalid category name.', null, 400);
+        if (!validateName($name, 100) || ($desc !== null && strlen($desc) > 255)) {
+            sendResponse(false, 'Invalid category name or description.', null, 400);
         }
 
         $stmt = $this->conn->prepare("SELECT category_id FROM category WHERE LOWER(category_name) = LOWER(:name) LIMIT 1");
@@ -53,8 +55,9 @@ class CategoryApi {
         }
 
         try {
-            $stmt = $this->conn->prepare("INSERT INTO category (category_name) VALUES (:name)");
+            $stmt = $this->conn->prepare("INSERT INTO category (category_name, description) VALUES (:name, :desc)");
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindParam(':desc', $desc, $desc === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
             $stmt->execute();
             $id = (int)$this->conn->lastInsertId();
         } catch (Throwable $e) {
@@ -72,8 +75,10 @@ class CategoryApi {
         $body = getRequestBody();
         $id = validatePositiveInt(isset($body['category_id']) ? $body['category_id'] : 0);
         $name = isset($body['category_name']) && is_string($body['category_name']) ? trim($body['category_name']) : '';
+        $desc = isset($body['description']) && is_string($body['description']) ? trim($body['description']) : null;
+        if ($desc === '') $desc = null;
 
-        if ($id <= 0 || !validateName($name, 100) || !$this->categoryExists($id)) {
+        if ($id <= 0 || !validateName($name, 100) || ($desc !== null && strlen($desc) > 255) || !$this->categoryExists($id)) {
             sendResponse(false, 'Request failed.', null, 400);
         }
 
@@ -86,8 +91,9 @@ class CategoryApi {
         }
 
         try {
-            $stmt = $this->conn->prepare("UPDATE category SET category_name = :name WHERE category_id = :id");
+            $stmt = $this->conn->prepare("UPDATE category SET category_name = :name, description = :desc WHERE category_id = :id");
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindParam(':desc', $desc, $desc === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Throwable $e) {
@@ -120,7 +126,7 @@ class CategoryApi {
     }
 
     private function getAllCategories() {
-        $stmt = $this->conn->query("SELECT category_id, category_name, is_active, created_at FROM category ORDER BY category_name ASC");
+        $stmt = $this->conn->query("SELECT category_id, category_name, description, is_active, created_at FROM category ORDER BY category_name ASC");
         return $stmt->fetchAll();
     }
 

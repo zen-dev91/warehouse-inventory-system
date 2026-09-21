@@ -2,7 +2,7 @@
 async function loadUsers() {
   const [userRes, roleRes] = await Promise.all([
     axios.get(API + 'users.php'),
-    axios.get(API + 'role.php')
+    axios.get(API + 'role.php?mode=active')
   ]);
   const failed = [userRes, roleRes].find(function (r) { return r.status !== 200; });
 
@@ -21,7 +21,14 @@ async function loadUsers() {
 function populateUserRoleDropdown() {
   const select = document.getElementById('user_role_id');
   if (!select) return;
-  const activeRoles = cache.roles.filter(function (r) { return parseInt(r.is_active) === 1; });
+  const isActorAdmin = Boolean(authUser && (parseInt(authUser.role_id) === 1 || authUser.role_name === 'Administrator'));
+  const activeRoles = (cache.roles || []).filter(function (r) {
+    if (parseInt(r.is_active) !== 1) return false;
+    if ((parseInt(r.role_id) === 1 || r.role_name === 'Administrator') && !isActorAdmin) {
+      return false;
+    }
+    return true;
+  });
   let html = '<option value="">Select Role</option>';
   for (let i = 0; i < activeRoles.length; i++) {
     html += '<option value="' + activeRoles[i].role_id + '">' + escapeHtml(activeRoles[i].role_name) + '</option>';

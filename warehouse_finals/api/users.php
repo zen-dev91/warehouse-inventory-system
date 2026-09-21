@@ -50,6 +50,12 @@ class UsersApi {
         if (!$role || (int)$role['is_active'] !== 1) {
             sendResponse(false, 'Please select a valid, active role.', null, 400);
         }
+
+        $isActorAdmin = ($actor['role_name'] === 'Administrator' || (int)$actor['role_id'] === 1);
+        if ((int)$roleId === 1 && !$isActorAdmin) {
+            sendResponse(false, 'Only Administrators can assign the Administrator role.', null, 403);
+        }
+
         if (!validateName($firstName, 50)) {
             sendResponse(false, 'First name is required (max 50 characters).', null, 400);
         }
@@ -104,8 +110,13 @@ class UsersApi {
             sendResponse(false, 'Request failed.', null, 404);
         }
 
+        $isActorAdmin = ($actor['role_name'] === 'Administrator' || (int)$actor['role_id'] === 1);
+
         switch ($action) {
             case 'reset_password':
+                if ($this->userIsActiveAdmin($id) && !$isActorAdmin) {
+                    sendResponse(false, 'Only Administrators can reset Administrator passwords.', null, 403);
+                }
                 $password = isset($body['password']) && is_string($body['password']) ? $body['password'] : '';
                 if (!validatePassword($password)) {
                     sendResponse(false, 'Request failed.', null, 400);
@@ -117,7 +128,14 @@ class UsersApi {
 
             case 'update_details':
             default:
+                if ($this->userIsActiveAdmin($id) && !$isActorAdmin) {
+                    sendResponse(false, 'You do not have permission to modify an Administrator account.', null, 403);
+                }
+
                 $roleId = validatePositiveInt(isset($body['role_id']) ? $body['role_id'] : 0);
+                if ((int)$roleId === 1 && !$isActorAdmin) {
+                    sendResponse(false, 'Only Administrators can assign the Administrator role.', null, 403);
+                }
                 $firstName = isset($body['first_name']) && is_string($body['first_name']) ? trim($body['first_name']) : '';
                 $lastName = isset($body['last_name']) && is_string($body['last_name']) ? trim($body['last_name']) : '';
                 $username = isset($body['username']) && is_string($body['username']) ? trim($body['username']) : '';
@@ -179,6 +197,15 @@ class UsersApi {
         $restore = isset($_GET['restore']) && (int)$_GET['restore'] === 1;
         if ($id <= 0) {
             sendResponse(false, 'Request failed.', null, 400);
+        }
+
+        if (!$restore && (int)$actor['user_id'] === $id) {
+            sendResponse(false, 'You cannot deactivate your currently logged-in account.', null, 409);
+        }
+
+        $isActorAdmin = ($actor['role_name'] === 'Administrator' || (int)$actor['role_id'] === 1);
+        if ($this->userIsActiveAdmin($id) && !$isActorAdmin) {
+            sendResponse(false, 'You do not have permission to change Administrator status.', null, 403);
         }
 
         switch ($restore) {

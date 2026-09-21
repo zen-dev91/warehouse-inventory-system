@@ -127,7 +127,15 @@ class ProductApi {
     private function getAllProducts() {
         $stmt = $this->conn->query(
             "SELECT p.product_id, p.category_id, c.category_name, p.product_name, p.unit_measure,
-                    p.unit_price, p.reorder_level, p.is_active, p.created_at
+                    p.unit_price, p.reorder_level, p.is_active, p.created_at,
+                    (
+                      COALESCE((SELECT SUM(d.quantity_received) FROM stock_receiving_detail d WHERE d.product_id = p.product_id), 0)
+                    + COALESCE((SELECT SUM(d.quantity_returned) FROM stocks_return_detail d WHERE d.product_id = p.product_id), 0)
+                    + COALESCE((SELECT SUM(d.quantity) FROM adjustment_detail d WHERE d.product_id = p.product_id AND d.adjustment_type = 'Addition'), 0)
+                    - COALESCE((SELECT SUM(d.quantity_released) FROM stock_releasing_detail d WHERE d.product_id = p.product_id), 0)
+                    - COALESCE((SELECT SUM(d.quantity_returned) FROM purchase_return_detail d WHERE d.product_id = p.product_id), 0)
+                    - COALESCE((SELECT SUM(d.quantity) FROM adjustment_detail d WHERE d.product_id = p.product_id AND d.adjustment_type = 'Deduction'), 0)
+                    ) AS stock_qty
              FROM product p INNER JOIN category c ON p.category_id = c.category_id
              ORDER BY p.product_name ASC"
         );

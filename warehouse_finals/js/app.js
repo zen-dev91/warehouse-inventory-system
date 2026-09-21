@@ -2,6 +2,7 @@
 const API = 'api/';
 let csrfToken = null;
 
+axios.defaults.withCredentials = true;
 axios.defaults.validateStatus = function () { return true; };
 
 axios.interceptors.request.use(function (config) {
@@ -125,6 +126,11 @@ function activateTab(tabName) {
   for (let i = 0; i < navItems.length; i++) {
     const isCurrent = navItems[i].getAttribute('data-tab') === tabName;
     navItems[i].classList.toggle('active', isCurrent);
+    if (isCurrent) {
+      navItems[i].setAttribute('aria-current', 'page');
+    } else {
+      navItems[i].removeAttribute('aria-current');
+    }
   }
 
   for (let i = 0; i < panels.length; i++) {
@@ -368,6 +374,16 @@ function applyRBAC() {
     txHdr.hidden = !hasTx;
   }
 
+  // Hide the section divider if either group is fully hidden
+  var sidebarNav = document.querySelector('#sidebarOffcanvas nav');
+  if (sidebarNav) {
+    var dividerHr = sidebarNav.querySelector('hr');
+    if (dividerHr) {
+      var showOverview = can('dashboard', 'view') || hasLookup;
+      dividerHr.hidden = !(showOverview && hasTx);
+    }
+  }
+
   const openers = document.querySelectorAll('[data-bs-target][data-module]');
   for (let i = 0; i < openers.length; i++) {
     const m = openers[i].getAttribute('data-module');
@@ -515,28 +531,28 @@ async function resetModalForAdd(modalId) {
     document.getElementById('poForm').reset();
     txItems.po = [];
     renderLineItemsTable('po');
-    await ensureMasterDataLoaded();
+    await ensureMasterDataLoaded(true);
     fillDropdownOptions('po_supplier_id', getActiveSuppliers(), 'supplier_id', function (s) { return s.supplier_name; });
     setCurrentUserSelect('po_user_id');
     fillDropdownOptions('po_item_product', getActiveProductsList(), 'product_id', function (p) { return p.product_name; });
   } else if (modalId === 'receivingModal') {
     document.getElementById('receivingForm').reset();
     renderEmptyRow(document.getElementById('receiving_items_table'), 'Select a purchase order first.', 3);
-    await ensureMasterDataLoaded();
+    await ensureMasterDataLoaded(false);
     setCurrentUserSelect('receiving_user_id');
     await loadPendingPurchaseOrders();
   } else if (modalId === 'releasingModal') {
     document.getElementById('releasingForm').reset();
     txItems.releasing = [];
     renderLineItemsTable('releasing');
-    await ensureMasterDataLoaded();
+    await ensureMasterDataLoaded(false);
     setCurrentUserSelect('releasing_user_id');
     fillDropdownOptions('releasing_item_product', getActiveProductsList(), 'product_id', function (p) { return p.product_name; });
   } else if (modalId === 'preturnModal') {
     document.getElementById('preturnForm').reset();
     txItems.preturn = [];
     renderLineItemsTable('preturn');
-    await ensureMasterDataLoaded();
+    await ensureMasterDataLoaded(true);
     fillDropdownOptions('preturn_supplier_id', getActiveSuppliers(), 'supplier_id', function (s) { return s.supplier_name; });
     setCurrentUserSelect('preturn_user_id');
     fillDropdownOptions('preturn_item_product', getActiveProductsList(), 'product_id', function (p) { return p.product_name; });
@@ -544,14 +560,14 @@ async function resetModalForAdd(modalId) {
     document.getElementById('sreturnForm').reset();
     txItems.sreturn = [];
     renderLineItemsTable('sreturn');
-    await ensureMasterDataLoaded();
+    await ensureMasterDataLoaded(false);
     setCurrentUserSelect('sreturn_user_id');
     fillDropdownOptions('sreturn_item_product', getActiveProductsList(), 'product_id', function (p) { return p.product_name; });
   } else if (modalId === 'adjustmentModal') {
     document.getElementById('adjustmentForm').reset();
     txItems.adjustment = [];
     renderLineItemsTable('adjustment');
-    await ensureMasterDataLoaded();
+    await ensureMasterDataLoaded(false);
     setCurrentUserSelect('adjustment_user_id');
     fillDropdownOptions('adjustment_item_product', getActiveProductsList(), 'product_id', function (p) { return p.product_name; });
   }
@@ -565,26 +581,17 @@ const txItems = {
   adjustment: []
 };
 
-async function ensureMasterDataLoaded() {
+async function ensureMasterDataLoaded(requiresSuppliers = false) {
   if (cache.products.length === 0) {
     const res = await axios.get(API + 'product.php');
-    switch (res.status) {
-      case 200:
-        cache.products = res.data.data;
-        break;
-      default:
-        showToast('Failed to load reference data', true);
-        return;
+    if (res.status === 200 && res.data && res.data.data) {
+      cache.products = res.data.data;
     }
   }
-  if (cache.suppliers.length === 0) {
+  if (requiresSuppliers && can('supplier', 'view') && cache.suppliers.length === 0) {
     const res = await axios.get(API + 'supplier.php');
-    switch (res.status) {
-      case 200:
-        cache.suppliers = res.data.data;
-        break;
-      default:
-        showToast('Failed to load reference data', true);
+    if (res.status === 200 && res.data && res.data.data) {
+      cache.suppliers = res.data.data;
     }
   }
 }

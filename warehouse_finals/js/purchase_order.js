@@ -74,13 +74,49 @@ async function savePurchaseOrder(e) {
     })
   };
 
-  const res = await axios.post(API + 'purchase_order.php', payload);
-  switch (res.status) {
-    case 200:
-      handleFormResult(res, 'poModal', loadPurchaseOrders);
-      break;
-    default:
-      showToast((res.data && res.data.message) || 'Request failed', true);
+  try {
+    const res = await axios.post(API + 'purchase_order.php', payload);
+    switch (res.status) {
+      case 200:
+        handleFormResult(res, 'poModal', loadPurchaseOrders);
+        break;
+      case 403:
+        showToast('Unauthorized: You do not have permission to create this purchase order.', true);
+        break;
+      case 422:
+        showToast('Validation Error: Please check your input fields.', true);
+        break;
+      case 500:
+        showToast('Server Error: Please try again later.', true);
+        break;
+      default: {
+        const msg = (res.data && res.data.message) ? res.data.message : 'Request failed.';
+        showToast('Error ' + res.status + ': ' + msg, true);
+        break;
+      }
+    }
+  } catch (error) {
+    if (error.response) {
+      switch (error.response.status) {
+        case 403:
+          showToast('Unauthorized: You do not have permission to create this purchase order.', true);
+          break;
+        case 422:
+          showToast('Validation Error: Please check your input fields.', true);
+          break;
+        case 500:
+          showToast('Server Error: Please try again later.', true);
+          break;
+        default: {
+          const msg = (error.response.data && error.response.data.message) ? error.response.data.message : 'Request failed.';
+          showToast('Error ' + error.response.status + ': ' + msg, true);
+          break;
+        }
+      }
+    } else {
+      showToast((error && error.message) || 'Request failed.', true);
+    }
   }
 }
+
 

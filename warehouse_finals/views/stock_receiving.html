@@ -7,6 +7,11 @@
     </div>
     <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#receivingModal" data-module="stock_receiving"><i class="bi bi-plus-lg me-1"></i>Record Receiving</button>
   </div>
+  <div id="receivingSuccessAlert" class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-3" role="alert" hidden>
+    <i class="bi bi-check-circle-fill me-2 fs-5 flex-shrink-0"></i>
+    <div id="receivingSuccessMsg">Stock received successfully.</div>
+    <button type="button" class="btn-close ms-auto" aria-label="Close" onclick="this.closest('.alert').hidden = true"></button>
+  </div>
   <div class="card">
     <div class="table-responsive">
       <table class="table table-hover mb-0 align-middle">

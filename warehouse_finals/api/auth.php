@@ -53,7 +53,7 @@ class AuthApi {
         $user = currentUser();
         sendResponse(true, $user ? 'Session active' : 'No active session', array(
             'user' => $user,
-            'permissions' => $user ? permissionsForRole($user['role_name']) : null,
+            'permissions' => $user ? permissionsForRole(isset($user['role_id']) ? (int)$user['role_id'] : $user['role_name']) : null,
             'csrf_token' => csrfToken()
         ));
     }
@@ -81,6 +81,9 @@ class AuthApi {
         session_regenerate_id(true);
         $_SESSION['user_id'] = (int)$row['user_id'];
         $_SESSION['user'] = $this->publicUserFromRow($row);
+        $_SESSION['role'] = $row['role_name'];
+        $_SESSION['role_name'] = $row['role_name'];
+        $_SESSION['role_id'] = (int)$row['role_id'];
         $_SESSION['last_activity'] = time();
         unset($_SESSION['csrf_token']);
         $token = csrfToken();
@@ -90,7 +93,7 @@ class AuthApi {
 
         sendResponse(true, 'Login successful.', array(
             'user' => $user,
-            'permissions' => permissionsForRole($user['role_name']),
+            'permissions' => permissionsForRole(isset($user['role_id']) ? (int)$user['role_id'] : $user['role_name']),
             'csrf_token' => $token
         ));
     }

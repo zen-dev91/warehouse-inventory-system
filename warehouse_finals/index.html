@@ -41,59 +41,80 @@
   <div class="d-flex flex-column vh-100 overflow-hidden">
     <header class="d-md-none navbar navbar-dark bg-dark px-3 py-2 border-bottom border-secondary flex-shrink-0">
       <div class="container-fluid px-0 d-flex align-items-center">
-        <button class="btn btn-outline-light btn-sm me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Toggle navigation">
-          <i class="bi bi-list fs-5"></i>
+        <button class="navbar-toggler border-0 me-2 p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Toggle navigation" aria-expanded="false">
+          <i class="bi bi-list fs-4"></i>
         </button>
-        <img src="assets/logo.jpg" alt="Logo" width="28" height="28" class="rounded me-2">
+        <i class="bi bi-box-seam-fill text-warning me-2"></i>
         <span class="navbar-brand mb-0 h6 text-white text-truncate" id="mobilePageTitle">Dashboard</span>
       </div>
     </header>
 
     <div class="d-flex flex-grow-1 overflow-hidden">
-      <aside class="offcanvas-md offcanvas-start d-flex flex-column bg-dark text-white flex-shrink-0 vh-100 min-vh-100" id="sidebarOffcanvas" tabindex="-1" aria-labelledby="sidebarOffcanvasLabel" style="width:250px;">
+      <aside class="offcanvas-md offcanvas-start d-flex flex-column bg-dark text-white flex-shrink-0 vh-100 min-vh-100" id="sidebarOffcanvas" tabindex="-1" aria-labelledby="sidebarOffcanvasLabel" data-bs-scroll="true">
+
+        <!-- Mobile offcanvas header -->
         <div class="offcanvas-header d-md-none border-bottom border-secondary px-3 py-2">
           <div class="d-flex align-items-center gap-2">
-            <img src="assets/logo.jpg" alt="Logo" width="32" height="32" class="rounded">
-            <strong class="fs-5 text-white" id="sidebarOffcanvasLabel">Warehouse</strong>
+            <i class="bi bi-box-seam-fill fs-4 text-warning"></i>
+            <div class="lh-1">
+              <span class="d-block fw-semibold small text-white">GymWorx</span>
+              <strong class="d-block fs-6 text-white" id="sidebarOffcanvasLabel">Warehouse</strong>
+            </div>
           </div>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas" aria-label="Close"></button>
         </div>
 
-        <div class="d-none d-md-flex align-items-center gap-2 px-3 py-2 border-bottom border-secondary flex-shrink-0">
-          <img src="assets/logo.jpg" alt="Logo" width="36" height="36" class="rounded">
-          <div>
+        <!-- Desktop brand header -->
+        <div class="d-none d-md-flex align-items-center gap-2 px-3 py-3 border-bottom border-secondary flex-shrink-0">
+          <i class="bi bi-box-seam-fill fs-3 text-warning"></i>
+          <div class="lh-1">
+            <span class="d-block fw-semibold small text-white-50">GymWorx</span>
             <strong class="d-block fs-5">Warehouse</strong>
           </div>
         </div>
 
+        <!-- Scrollable nav body -->
         <div class="offcanvas-body d-flex flex-column p-0 flex-grow-1 overflow-y-auto">
-          <nav class="nav flex-column flex-nowrap px-2 py-1 flex-grow-1">
-            <small class="text-secondary text-uppercase px-2 mt-2 mb-1" id="sidebarHeaderOverview">Overview</small>
-            <button class="nav-link text-white py-1 px-2 active" data-tab="dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</button>
+          <nav class="nav flex-column flex-nowrap px-2 pt-2 pb-1 flex-grow-1" aria-label="Sidebar navigation">
 
-            <small class="text-secondary text-uppercase px-2 mt-2 mb-1" id="sidebarHeaderLookup">Lookup Tables</small>
-            <button class="nav-link text-white py-1 px-2" data-tab="category" data-module="category"><i class="bi bi-diagram-3 me-2"></i>Categories</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="product" data-module="product"><i class="bi bi-box-seam me-2"></i>Products</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="supplier" data-module="supplier"><i class="bi bi-truck me-2"></i>Suppliers</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="product_supplier" data-module="product_supplier"><i class="bi bi-link-45deg me-2"></i>Product ↔ Supplier</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="role" data-module="role"><i class="bi bi-shield-lock me-2"></i>Roles</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="users" data-module="users"><i class="bi bi-people me-2"></i>Users</button>
+            <!-- OVERVIEW section -->
+            <small class="text-uppercase fw-semibold text-secondary px-3 pt-2 pb-1" id="sidebarHeaderOverview">Overview</small>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center active" data-tab="dashboard" aria-current="page"><i class="bi bi-speedometer2 me-2"></i>Dashboard</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="category" data-module="category"><i class="bi bi-grid me-2"></i>Categories</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="product" data-module="product"><i class="bi bi-box-seam me-2"></i>Products</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="supplier" data-module="supplier"><i class="bi bi-truck me-2"></i>Suppliers</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="product_supplier" data-module="product_supplier"><i class="bi bi-link-45deg me-2"></i>Product ↔ Supplier</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="role" data-module="role"><i class="bi bi-shield-lock me-2"></i>Roles</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="users" data-module="users"><i class="bi bi-people me-2"></i>Users</button>
 
-            <small class="text-secondary text-uppercase px-2 mt-2 mb-1" id="sidebarHeaderTransactions">Transactions</small>
-            <button class="nav-link text-white py-1 px-2" data-tab="purchase_order" data-module="purchase_order"><i class="bi bi-cart-plus me-2"></i>Purchase Order</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="stock_receiving" data-module="stock_receiving"><i class="bi bi-box-arrow-in-down me-2"></i>Stock Receiving</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="stock_releasing" data-module="stock_releasing"><i class="bi bi-box-arrow-up me-2"></i>Stock Releasing</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="purchase_return" data-module="purchase_return"><i class="bi bi-arrow-return-left me-2"></i>Purchase Return</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="stocks_return" data-module="stocks_return"><i class="bi bi-arrow-return-right me-2"></i>Stocks Return</button>
-            <button class="nav-link text-white py-1 px-2" data-tab="adjustment" data-module="adjustment"><i class="bi bi-sliders me-2"></i>Adjustments</button>
+            <!-- Section divider -->
+            <hr class="border-secondary my-2 mx-2 opacity-50">
+
+            <!-- TRANSACTIONS section -->
+            <small class="text-uppercase fw-semibold text-secondary px-3 pt-1 pb-1" id="sidebarHeaderTransactions">Transactions</small>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="purchase_order" data-module="purchase_order"><i class="bi bi-cart-plus me-2"></i>Purchase Order</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="stock_receiving" data-module="stock_receiving"><i class="bi bi-box-arrow-in-down me-2"></i>Stock Receiving</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="stock_releasing" data-module="stock_releasing"><i class="bi bi-box-arrow-up me-2"></i>Stock Releasing</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="purchase_return" data-module="purchase_return"><i class="bi bi-arrow-return-left me-2"></i>Purchase Return</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="stocks_return" data-module="stocks_return"><i class="bi bi-arrow-return-right me-2"></i>Stocks Return</button>
+            <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="adjustment" data-module="adjustment"><i class="bi bi-sliders me-2"></i>Adjustments</button>
+
           </nav>
 
-          <div class="p-2 border-top border-secondary flex-shrink-0 mt-auto bg-dark" id="sidebarUserBox">
-            <div class="px-2 py-0">
-              <strong class="d-block small" id="sidebarUserName">—</strong>
-              <span class="badge bg-secondary" id="sidebarUserRole">—</span>
+          <!-- User area (bottom) -->
+          <div class="border-top border-secondary flex-shrink-0 mt-auto p-3" id="sidebarUserBox">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="d-inline-flex align-items-center justify-content-center bg-secondary bg-opacity-50 rounded-circle" aria-hidden="true">
+                <i class="bi bi-person-fill fs-5 p-1"></i>
+              </span>
+              <div class="lh-sm overflow-hidden">
+                <strong class="d-block small text-truncate" id="sidebarUserName">—</strong>
+                <span class="badge bg-success bg-opacity-75 fw-normal" id="sidebarUserRole">—</span>
+              </div>
             </div>
-            <button class="nav-link text-white py-1 px-2 w-100 text-start" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Log Out</button>
+            <button class="btn btn-outline-light btn-sm w-100 d-flex align-items-center justify-content-center gap-2" id="logoutBtn" aria-label="Log out">
+              <i class="bi bi-box-arrow-right"></i>Logout
+            </button>
           </div>
         </div>
       </aside>
@@ -102,8 +123,8 @@
 
     <section class="panel active" id="panel-dashboard">
       <div class="mb-4">
-        <h1 class="h3">Administrator Dashboard</h1>
-        <p class="text-muted">Administrator overview of warehouse master data and system activity.</p>
+        <h1 class="h3" id="dashboardTitle">Dashboard</h1>
+        <p class="text-muted" id="dashboardSubtitle">Overview of warehouse master data and system activity.</p>
       </div>
 
       <div class="row g-3 mb-4" id="statGrid"></div>
@@ -141,7 +162,7 @@
         <div class="table-responsive">
           <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
-              <tr><th>Product Name</th><th>Category</th><th>Unit</th><th>Unit Price</th><th>Reorder Lvl</th><th>Status</th><th class="text-end text-nowrap">Actions</th></tr>
+              <tr><th>Product Name</th><th>Category</th><th>Unit</th><th>Unit Price</th><th>In Stock</th><th>Reorder Lvl</th><th>Status</th><th class="text-end text-nowrap">Actions</th></tr>
             </thead>
             <tbody id="productTable"></tbody>
           </table>
@@ -305,6 +326,11 @@
         </div>
         <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#receivingModal" data-module="stock_receiving"><i class="bi bi-plus-lg me-1"></i>Record Receiving</button>
       </div>
+      <div id="receivingSuccessAlert" class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-3" role="alert" hidden>
+        <i class="bi bi-check-circle-fill me-2 fs-5 flex-shrink-0"></i>
+        <div id="receivingSuccessMsg">Stock received successfully.</div>
+        <button type="button" class="btn-close ms-auto" aria-label="Close" onclick="this.closest('.alert').hidden = true"></button>
+      </div>
       <div class="card">
         <div class="table-responsive">
           <table class="table table-hover mb-0 align-middle">
@@ -389,7 +415,7 @@
         <div class="table-responsive">
           <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
-              <tr><th>Adjusted By</th><th>Date</th><th>Reason</th><th>Items</th></tr>
+              <tr><th>Product Name</th><th>Type</th><th>Quantity</th></tr>
             </thead>
             <tbody id="adjustmentTable"></tbody>
           </table>
@@ -600,7 +626,7 @@
                   <tr>
                     <td class="ps-3">Dashboard</td>
                     <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-view" data-module="dashboard" data-action="view" id="perm_view_dashboard"></td>
-                    <td class="text-center"><input type="checkbox" class="form-check-input perm-check perm-manage" data-module="dashboard" data-action="manage" id="perm_manage_dashboard"></td>
+                    <td class="text-center text-muted small fst-italic">N/A</td>
                   </tr>
                   <tr>
                     <td class="ps-3">Categories</td>
@@ -1157,6 +1183,7 @@
     <td class="row-cat"></td>
     <td class="row-unit"></td>
     <td class="font-monospace row-price"></td>
+    <td class="font-monospace row-stock"></td>
     <td class="row-reorder"></td>
     <td class="row-status"></td>
     <td class="text-end text-nowrap row-actions"></td>
@@ -1244,10 +1271,9 @@
 </template>
 <template id="tmpl-row-adjustment">
   <tr>
-    <td class="row-by"></td>
-    <td class="row-date"></td>
-    <td class="row-reason"></td>
-    <td class="row-items"></td>
+    <td class="row-product"></td>
+    <td class="row-type"></td>
+    <td class="font-monospace row-qty"></td>
   </tr>
 </template>
 <template id="tmpl-row-receiving-item">

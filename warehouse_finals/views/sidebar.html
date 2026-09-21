@@ -1,48 +1,68 @@
-<aside class="offcanvas-md offcanvas-start d-flex flex-column bg-dark text-white flex-shrink-0 vh-100 min-vh-100" id="sidebarOffcanvas" tabindex="-1" aria-labelledby="sidebarOffcanvasLabel" style="width:250px;">
+<aside class="offcanvas-md offcanvas-start d-flex flex-column bg-dark text-white flex-shrink-0 vh-100 min-vh-100" id="sidebarOffcanvas" tabindex="-1" aria-labelledby="sidebarOffcanvasLabel" data-bs-scroll="true">
+
+  <!-- Mobile offcanvas header -->
   <div class="offcanvas-header d-md-none border-bottom border-secondary px-3 py-2">
     <div class="d-flex align-items-center gap-2">
-      <img src="assets/logo.jpg" alt="Logo" width="32" height="32" class="rounded">
-      <strong class="fs-5 text-white" id="sidebarOffcanvasLabel">Warehouse</strong>
+      <i class="bi bi-box-seam-fill fs-4 text-warning"></i>
+      <div class="lh-1">
+        <span class="d-block fw-semibold small text-white">GymWorx</span>
+        <strong class="d-block fs-6 text-white" id="sidebarOffcanvasLabel">Warehouse</strong>
+      </div>
     </div>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas" aria-label="Close"></button>
   </div>
 
-  <div class="d-none d-md-flex align-items-center gap-2 px-3 py-2 border-bottom border-secondary flex-shrink-0">
-    <img src="assets/logo.jpg" alt="Logo" width="36" height="36" class="rounded">
-    <div>
+  <!-- Desktop brand header -->
+  <div class="d-none d-md-flex align-items-center gap-2 px-3 py-3 border-bottom border-secondary flex-shrink-0">
+    <i class="bi bi-box-seam-fill fs-3 text-warning"></i>
+    <div class="lh-1">
+      <span class="d-block fw-semibold small text-white-50">GymWorx</span>
       <strong class="d-block fs-5">Warehouse</strong>
     </div>
   </div>
 
+  <!-- Scrollable nav body -->
   <div class="offcanvas-body d-flex flex-column p-0 flex-grow-1 overflow-y-auto">
-    <nav class="nav flex-column flex-nowrap px-2 py-1 flex-grow-1">
-      <small class="text-secondary text-uppercase px-2 mt-2 mb-1" id="sidebarHeaderOverview">Overview</small>
-      <button class="nav-link text-white py-1 px-2 active" data-tab="dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</button>
+    <nav class="nav flex-column flex-nowrap px-2 pt-2 pb-1 flex-grow-1" aria-label="Sidebar navigation">
 
-      <small class="text-secondary text-uppercase px-2 mt-2 mb-1" id="sidebarHeaderLookup">Lookup Tables</small>
-      <button class="nav-link text-white py-1 px-2" data-tab="category" data-module="category"><i class="bi bi-diagram-3 me-2"></i>Categories</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="product" data-module="product"><i class="bi bi-box-seam me-2"></i>Products</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="supplier" data-module="supplier"><i class="bi bi-truck me-2"></i>Suppliers</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="product_supplier" data-module="product_supplier"><i class="bi bi-link-45deg me-2"></i>Product ↔ Supplier</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="role" data-module="role"><i class="bi bi-shield-lock me-2"></i>Roles</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="users" data-module="users"><i class="bi bi-people me-2"></i>Users</button>
+      <!-- OVERVIEW section -->
+      <small class="text-uppercase fw-semibold text-secondary px-3 pt-2 pb-1 letter-spacing-1" id="sidebarHeaderOverview">Overview</small>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center active" data-tab="dashboard" aria-current="page"><i class="bi bi-speedometer2 me-2"></i>Dashboard</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="category" data-module="category"><i class="bi bi-grid me-2"></i>Categories</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="product" data-module="product"><i class="bi bi-box-seam me-2"></i>Products</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="supplier" data-module="supplier"><i class="bi bi-truck me-2"></i>Suppliers</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="product_supplier" data-module="product_supplier"><i class="bi bi-link-45deg me-2"></i>Product ↔ Supplier</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="role" data-module="role"><i class="bi bi-shield-lock me-2"></i>Roles</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="users" data-module="users"><i class="bi bi-people me-2"></i>Users</button>
 
-      <small class="text-secondary text-uppercase px-2 mt-2 mb-1" id="sidebarHeaderTransactions">Transactions</small>
-      <button class="nav-link text-white py-1 px-2" data-tab="purchase_order" data-module="purchase_order"><i class="bi bi-cart-plus me-2"></i>Purchase Order</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="stock_receiving" data-module="stock_receiving"><i class="bi bi-box-arrow-in-down me-2"></i>Stock Receiving</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="stock_releasing" data-module="stock_releasing"><i class="bi bi-box-arrow-up me-2"></i>Stock Releasing</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="purchase_return" data-module="purchase_return"><i class="bi bi-arrow-return-left me-2"></i>Purchase Return</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="stocks_return" data-module="stocks_return"><i class="bi bi-arrow-return-right me-2"></i>Stocks Return</button>
-      <button class="nav-link text-white py-1 px-2" data-tab="adjustment" data-module="adjustment"><i class="bi bi-sliders me-2"></i>Adjustments</button>
+      <!-- Section divider -->
+      <hr class="border-secondary my-2 mx-2 opacity-50">
+
+      <!-- TRANSACTIONS section -->
+      <small class="text-uppercase fw-semibold text-secondary px-3 pt-1 pb-1" id="sidebarHeaderTransactions">Transactions</small>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="purchase_order" data-module="purchase_order"><i class="bi bi-cart-plus me-2"></i>Purchase Order</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="stock_receiving" data-module="stock_receiving"><i class="bi bi-box-arrow-in-down me-2"></i>Stock Receiving</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="stock_releasing" data-module="stock_releasing"><i class="bi bi-box-arrow-up me-2"></i>Stock Releasing</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="purchase_return" data-module="purchase_return"><i class="bi bi-arrow-return-left me-2"></i>Purchase Return</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="stocks_return" data-module="stocks_return"><i class="bi bi-arrow-return-right me-2"></i>Stocks Return</button>
+      <button class="nav-link text-white rounded-2 py-2 px-3 mb-1 d-flex align-items-center" data-tab="adjustment" data-module="adjustment"><i class="bi bi-sliders me-2"></i>Adjustments</button>
+
     </nav>
 
-    <div class="p-2 border-top border-secondary flex-shrink-0 mt-auto bg-dark" id="sidebarUserBox">
-      <div class="px-2 py-0">
-        <strong class="d-block small" id="sidebarUserName"><?php echo !empty($sessionUser) ? htmlspecialchars($sessionUser['first_name'] . ' ' . $sessionUser['last_name']) : '—'; ?></strong>
-        <span class="badge bg-secondary" id="sidebarUserRole"><?php echo !empty($sessionUser['role_name']) ? htmlspecialchars($sessionUser['role_name']) : '—'; ?></span>
+    <!-- User area (bottom) -->
+    <div class="border-top border-secondary flex-shrink-0 mt-auto p-3" id="sidebarUserBox">
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <span class="d-inline-flex align-items-center justify-content-center bg-secondary bg-opacity-50 rounded-circle" aria-hidden="true">
+          <i class="bi bi-person-fill fs-5 p-1"></i>
+        </span>
+        <div class="lh-sm overflow-hidden">
+          <strong class="d-block small text-truncate" id="sidebarUserName"><?php echo !empty($sessionUser) ? htmlspecialchars($sessionUser['first_name'] . ' ' . $sessionUser['last_name']) : '—'; ?></strong>
+          <span class="badge bg-success bg-opacity-75 fw-normal" id="sidebarUserRole"><?php echo !empty($sessionUser['role_name']) ? htmlspecialchars($sessionUser['role_name']) : '—'; ?></span>
+        </div>
       </div>
-      <button class="nav-link text-white py-1 px-2 w-100 text-start" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Log Out</button>
+      <button class="btn btn-outline-light btn-sm w-100 d-flex align-items-center justify-content-center gap-2" id="logoutBtn" aria-label="Log out">
+        <i class="bi bi-box-arrow-right"></i>Logout
+      </button>
     </div>
   </div>
 </aside>
-

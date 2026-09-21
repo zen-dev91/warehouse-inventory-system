@@ -30,14 +30,24 @@ class RoleApi {
     }
 
     private function get() {
-        requirePermission('role', 'view');
         $mode = isset($_GET['mode']) ? (string)$_GET['mode'] : 'all';
+        if ($mode === 'active') {
+            requirePermission(array('role', 'users'), 'view');
+        } else {
+            requirePermission('role', 'view');
+        }
         sendResponse(true, 'Roles retrieved', $mode === 'active' ? $this->getActiveRoles() : $this->getRolesWithPermissions());
     }
 
     private function post() {
         $actor = requirePermission('role', 'manage');
         requireCsrf();
+
+        $isActorAdmin = ($actor['role_name'] === 'Administrator' || (int)$actor['role_id'] === 1);
+        if (!$isActorAdmin) {
+            sendResponse(false, 'Only Administrators can create new roles.', null, 403);
+        }
+
         $body = getRequestBody();
         $name = isset($body['role_name']) && is_string($body['role_name']) ? trim($body['role_name']) : '';
 
@@ -100,6 +110,12 @@ class RoleApi {
     private function put() {
         $actor = requirePermission('role', 'manage');
         requireCsrf();
+
+        $isActorAdmin = ($actor['role_name'] === 'Administrator' || (int)$actor['role_id'] === 1);
+        if (!$isActorAdmin) {
+            sendResponse(false, 'Only Administrators can modify roles and permissions.', null, 403);
+        }
+
         $body = getRequestBody();
         $id = validatePositiveInt(isset($body['role_id']) ? $body['role_id'] : 0);
         $name = isset($body['role_name']) && is_string($body['role_name']) ? trim($body['role_name']) : '';
@@ -186,6 +202,12 @@ class RoleApi {
     private function delete() {
         $actor = requirePermission('role', 'manage');
         requireCsrf();
+
+        $isActorAdmin = ($actor['role_name'] === 'Administrator' || (int)$actor['role_id'] === 1);
+        if (!$isActorAdmin) {
+            sendResponse(false, 'Only Administrators can change role status.', null, 403);
+        }
+
         $id = validatePositiveInt(isset($_GET['id']) ? $_GET['id'] : 0);
         $restore = isset($_GET['restore']) && (int)$_GET['restore'] === 1;
         $role = $this->getRole($id);

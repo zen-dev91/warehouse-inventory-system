@@ -27,8 +27,12 @@ class PurchaseOrderApi {
     }
 
     private function get() {
-        requirePermission('purchase_order', 'view');
         $mode = isset($_GET['mode']) ? (string)$_GET['mode'] : 'all';
+        if ($mode === 'pending' || $mode === 'detail') {
+            requirePermission(array('purchase_order', 'stock_receiving'), 'view');
+        } else {
+            requirePermission('purchase_order', 'view');
+        }
 
         switch ($mode) {
             case 'pending':

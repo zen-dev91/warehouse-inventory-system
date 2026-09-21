@@ -3,8 +3,8 @@ async function loadDashboard() {
   const grid = document.getElementById('statGrid');
   grid.replaceChildren(document.getElementById('tmpl-stat-card-loading').content.cloneNode(true));
 
-  const catReq = axios.get(API + 'category.php');
-  const prodReq = axios.get(API + 'product.php');
+  const catReq = can('category', 'view') ? axios.get(API + 'category.php') : Promise.resolve({ status: 200, data: { data: null } });
+  const prodReq = can('product', 'view') ? axios.get(API + 'product.php') : Promise.resolve({ status: 200, data: { data: null } });
   const supReq = can('supplier', 'view') ? axios.get(API + 'supplier.php') : Promise.resolve({ status: 200, data: { data: null } });
   const userReq = can('users', 'view') ? axios.get(API + 'users.php') : Promise.resolve({ status: 200, data: { data: null } });
 
@@ -41,21 +41,32 @@ function countLowStockCandidates(products) {
 }
 
 function renderDashboard(categories, products, suppliers, users) {
-  const grid = document.getElementById('statGrid');
-  const cards = [
-    { icon: 'bi-diagram-3', value: countActive(categories), label: 'Active Categories' },
-    { icon: 'bi-box-seam', value: countActive(products), label: 'Active Products' }
-  ];
+  const titleEl = document.getElementById('dashboardTitle');
+  const subtitleEl = document.getElementById('dashboardSubtitle');
+  if (titleEl && authUser) {
+    titleEl.textContent = (authUser.role_name || 'Warehouse') + ' Dashboard';
+  }
+  if (subtitleEl && authUser) {
+    subtitleEl.textContent = 'Welcome, ' + escapeHtml(authUser.first_name + ' ' + authUser.last_name) + '. Overview of your active modules.';
+  }
 
+  const grid = document.getElementById('statGrid');
+  const cards = [];
+
+  if (categories !== null) {
+    cards.push({ icon: 'bi-diagram-3', value: countActive(categories), label: 'Active Categories' });
+  }
+  if (products !== null) {
+    cards.push({ icon: 'bi-box-seam', value: countActive(products), label: 'Active Products' });
+    cards.push({ icon: 'bi-exclamation-triangle', value: countLowStockCandidates(products), label: 'Products At/Below Reorder Level*' });
+    cards.push({ icon: 'bi-archive', value: products ? products.length : 0, label: 'Total Products On File' });
+  }
   if (suppliers !== null) {
     cards.push({ icon: 'bi-truck', value: countActive(suppliers), label: 'Active Suppliers' });
   }
   if (users !== null) {
     cards.push({ icon: 'bi-people', value: countActive(users), label: 'Active Users' });
   }
-
-  cards.push({ icon: 'bi-exclamation-triangle', value: countLowStockCandidates(products), label: 'Products At/Below Reorder Level*' });
-  cards.push({ icon: 'bi-archive', value: products ? products.length : 0, label: 'Total Products On File' });
 
   grid.innerHTML = '';
   const tmpl = document.getElementById('tmpl-stat-card');

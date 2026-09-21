@@ -92,6 +92,18 @@ async function loadPoItemsForReceiving() {
   }
 }
 
+function showReceivingNotification(message) {
+  const alertEl = document.getElementById('receivingSuccessAlert');
+  if (alertEl) {
+    const msgEl = document.getElementById('receivingSuccessMsg');
+    if (msgEl) msgEl.textContent = message || 'Stock received successfully.';
+    alertEl.hidden = false;
+    setTimeout(function () {
+      alertEl.hidden = true;
+    }, 5000);
+  }
+}
+
 async function saveStockReceiving(e) {
   e.preventDefault();
   const poId = document.getElementById('receiving_po_id').value;
@@ -127,13 +139,51 @@ async function saveStockReceiving(e) {
     items: items
   };
 
-  const res = await axios.post(API + 'stock_receiving.php', payload);
-  switch (res.status) {
-    case 200:
-      handleFormResult(res, 'receivingModal', loadStockReceiving);
-      break;
-    default:
-      showToast((res.data && res.data.message) || 'Request failed', true);
+  try {
+    const res = await axios.post(API + 'stock_receiving.php', payload);
+    switch (res.status) {
+      case 200: {
+        const msg = (res.data && res.data.message) ? res.data.message : 'Stock received successfully.';
+        showReceivingNotification(msg);
+        handleFormResult(res, 'receivingModal', loadStockReceiving);
+        break;
+      }
+      case 403:
+        showToast('Unauthorized: You do not have permission to record stock receiving.', true);
+        break;
+      case 422:
+        showToast('Validation Error: Please check your input fields.', true);
+        break;
+      case 500:
+        showToast('Server Error: Please try again later.', true);
+        break;
+      default: {
+        const msg = (res.data && res.data.message) ? res.data.message : 'Request failed.';
+        showToast('Error ' + res.status + ': ' + msg, true);
+        break;
+      }
+    }
+  } catch (error) {
+    if (error.response) {
+      switch (error.response.status) {
+        case 403:
+          showToast('Unauthorized: You do not have permission to record stock receiving.', true);
+          break;
+        case 422:
+          showToast('Validation Error: Please check your input fields.', true);
+          break;
+        case 500:
+          showToast('Server Error: Please try again later.', true);
+          break;
+        default: {
+          const msg = (error.response.data && error.response.data.message) ? error.response.data.message : 'Request failed.';
+          showToast('Error ' + error.response.status + ': ' + msg, true);
+          break;
+        }
+      }
+    } else {
+      showToast((error && error.message) || 'Request failed.', true);
+    }
   }
 }
 

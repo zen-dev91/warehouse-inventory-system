@@ -23,10 +23,10 @@ $isLoggedIn = !empty($sessionUser);
   <div class="d-flex flex-column vh-100 overflow-hidden">
     <header class="d-md-none navbar navbar-dark bg-dark px-3 py-2 border-bottom border-secondary flex-shrink-0">
       <div class="container-fluid px-0 d-flex align-items-center">
-        <button class="btn btn-outline-light btn-sm me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Toggle navigation">
-          <i class="bi bi-list fs-5"></i>
+        <button class="navbar-toggler border-0 me-2 p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Toggle navigation" aria-expanded="false">
+          <i class="bi bi-list fs-4"></i>
         </button>
-        <img src="assets/logo.jpg" alt="Logo" width="28" height="28" class="rounded me-2">
+        <i class="bi bi-box-seam-fill text-warning me-2"></i>
         <span class="navbar-brand mb-0 h6 text-white text-truncate" id="mobilePageTitle">Dashboard</span>
       </div>
     </header>

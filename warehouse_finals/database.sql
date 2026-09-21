@@ -182,33 +182,16 @@ CREATE TABLE adjustment_detail (
 
 
 -- ============================================================
--- SECURITY TABLES
+-- ACCESS CONTROL TABLE
 -- ============================================================
 
-CREATE TABLE audit_log (
-    audit_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NULL,
-    role VARCHAR(50) NULL,
-    action VARCHAR(50) NOT NULL,
+CREATE TABLE role_permissions (
+    role_id INT NOT NULL,
     module VARCHAR(50) NOT NULL,
-    record_id INT NULL,
-    description VARCHAR(1000) NULL,
-    ip_address VARCHAR(45) NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_audit_user (user_id),
-    INDEX idx_audit_module_action (module, action),
-    INDEX idx_audit_created (created_at),
-    CONSTRAINT fk_audit_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
-) ENGINE=InnoDB;
-
-CREATE TABLE login_attempts (
-    username VARCHAR(50) NOT NULL,
-    ip_address VARCHAR(45) NOT NULL,
-    attempts INT NOT NULL DEFAULT 0,
-    last_attempt_at DATETIME NOT NULL,
-    locked_until DATETIME NULL,
-    PRIMARY KEY (username, ip_address),
-    INDEX idx_login_locked (locked_until)
+    can_view TINYINT(1) NOT NULL DEFAULT 0,
+    can_manage TINYINT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (role_id, module),
+    CONSTRAINT fk_rp_role FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 SET FOREIGN_KEY_CHECKS = 1;
@@ -262,3 +245,57 @@ INSERT INTO product_supplier (product_id, supplier_id, supplier_unit_cost) VALUE
 (7, 4, 1450.00),
 (8, 4, 1550.00),
 (9, 5, 900.00);
+
+INSERT INTO role_permissions (role_id, module, can_view, can_manage) VALUES
+(1, 'adjustment', 1, 1),
+(1, 'category', 1, 1),
+(1, 'dashboard', 1, 1),
+(1, 'product', 1, 1),
+(1, 'product_supplier', 1, 1),
+(1, 'purchase_order', 1, 1),
+(1, 'purchase_return', 1, 1),
+(1, 'role', 1, 1),
+(1, 'stocks_return', 1, 1),
+(1, 'stock_receiving', 1, 1),
+(1, 'stock_releasing', 1, 1),
+(1, 'supplier', 1, 1),
+(1, 'users', 1, 1),
+(2, 'adjustment', 1, 1),
+(2, 'category', 1, 0),
+(2, 'dashboard', 1, 0),
+(2, 'product', 1, 0),
+(2, 'product_supplier', 1, 0),
+(2, 'purchase_order', 1, 0),
+(2, 'purchase_return', 1, 1),
+(2, 'role', 0, 0),
+(2, 'stocks_return', 1, 1),
+(2, 'stock_receiving', 1, 1),
+(2, 'stock_releasing', 1, 1),
+(2, 'supplier', 1, 0),
+(2, 'users', 0, 0),
+(3, 'adjustment', 0, 0),
+(3, 'category', 1, 0),
+(3, 'dashboard', 1, 0),
+(3, 'product', 1, 0),
+(3, 'product_supplier', 1, 1),
+(3, 'purchase_order', 1, 1),
+(3, 'purchase_return', 1, 1),
+(3, 'role', 0, 0),
+(3, 'stocks_return', 0, 0),
+(3, 'stock_receiving', 1, 0),
+(3, 'stock_releasing', 0, 0),
+(3, 'supplier', 1, 1),
+(3, 'users', 0, 0),
+(4, 'adjustment', 0, 0),
+(4, 'category', 1, 0),
+(4, 'dashboard', 1, 0),
+(4, 'product', 1, 0),
+(4, 'product_supplier', 0, 0),
+(4, 'purchase_order', 0, 0),
+(4, 'purchase_return', 0, 0),
+(4, 'role', 0, 0),
+(4, 'stocks_return', 1, 1),
+(4, 'stock_receiving', 0, 0),
+(4, 'stock_releasing', 1, 1),
+(4, 'supplier', 0, 0),
+(4, 'users', 0, 0);

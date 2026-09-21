@@ -68,10 +68,10 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', '1');
     ini_set('session.cookie_secure', $isHttps ? '1' : '0');
     ini_set('session.cookie_samesite', 'Lax');
-    ini_set('session.gc_maxlifetime', '1800');
+    ini_set('session.gc_maxlifetime', '28800');
 
     session_set_cookie_params(array(
-        'lifetime' => 0,
+        'lifetime' => 28800,
         'path' => '/',
         'secure' => $isHttps,
         'httponly' => true,
@@ -119,21 +119,28 @@ function requireCsrf() {
 }
 
 function currentUser() {
-    static $loaded = false;
+    static $cachedUserId = null;
     static $user = null;
 
-    if ($loaded) {
-        return $user;
-    }
-    $loaded = true;
+    $sessionUserId = !empty($_SESSION['user_id']) && filter_var($_SESSION['user_id'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)))
+        ? (int)$_SESSION['user_id'] : null;
 
-    if (empty($_SESSION['user_id']) || !filter_var($_SESSION['user_id'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)))) {
+    if ($sessionUserId === null) {
+        $cachedUserId = null;
+        $user = null;
         return null;
     }
-    if (!empty($_SESSION['last_activity']) && (time() - (int)$_SESSION['last_activity']) > 1800) {
+
+    if (!empty($_SESSION['last_activity']) && (time() - (int)$_SESSION['last_activity']) > 28800) {
         $_SESSION = array();
         session_destroy();
+        $cachedUserId = null;
+        $user = null;
         return null;
+    }
+
+    if ($cachedUserId === $sessionUserId && $user !== null) {
+        return $user;
     }
 
     $conn = getConnection();
@@ -165,7 +172,11 @@ function currentUser() {
         'username' => $row['username']
     );
     $_SESSION['user'] = $user;
+    $_SESSION['role'] = $row['role_name'];
+    $_SESSION['role_name'] = $row['role_name'];
+    $_SESSION['role_id'] = (int)$row['role_id'];
     $_SESSION['last_activity'] = time();
+    $cachedUserId = $user['user_id'];
     return $user;
 }
 
@@ -175,7 +186,7 @@ function requireAuthenticated() {
         sendResponse(false, 'Request failed.', null, 401);
     }
 
-    $timeout = 1800;
+    $timeout = 28800;
     if (!empty($_SESSION['last_activity']) && (time() - (int)$_SESSION['last_activity']) > $timeout) {
         $_SESSION = array();
         session_destroy();
@@ -189,10 +200,18 @@ function requireAuthenticated() {
 function requirePermission($module, $action = 'view') {
     $user = requireAuthenticated();
 
+    $roleName = isset($user['role_name']) ? trim((string)$user['role_name']) : '';
+    $roleId = isset($user['role_id']) ? (int)$user['role_id'] : 0;
+    if ($roleId === 1 || strcasecmp($roleName, 'Administrator') === 0) {
+        return $user;
+    }
+
+    $roleIdentifier = $roleId > 0 ? $roleId : $roleName;
+
     if (is_array($module)) {
         $allowed = false;
         foreach ($module as $m) {
-            if (userCan($user['role_name'], $m, $action)) {
+            if (userCan($roleIdentifier, $m, $action)) {
                 $allowed = true;
                 break;
             }
@@ -201,7 +220,7 @@ function requirePermission($module, $action = 'view') {
             sendResponse(false, 'You are not authorized to perform this action.', null, 403);
         }
     } else {
-        if (!userCan($user['role_name'], $module, $action)) {
+        if (!userCan($roleIdentifier, $module, $action)) {
             sendResponse(false, 'You are not authorized to perform this action.', null, 403);
         }
     }
